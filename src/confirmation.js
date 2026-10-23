@@ -136,6 +136,26 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   });
 
+  document.getElementById("copy-url")?.addEventListener("click", async (event) => {
+    const copyButton = event.currentTarget;
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      const textarea = document.createElement("textarea");
+      textarea.value = url;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      textarea.remove();
+    }
+    copyButton.textContent = "Copied!";
+    setTimeout(() => {
+      copyButton.textContent = "Copy URL";
+    }, 2000);
+  });
+
   document.getElementById("exit-page")?.addEventListener("click", () => {
     browserAPI.runtime.sendMessage({
       action: "exitNavigation",
